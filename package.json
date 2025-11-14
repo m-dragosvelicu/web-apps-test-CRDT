@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "server": "y-websocket --port 1234"
+    "server": "y-websocket --port 1234",
+    "test": "node tests/concurrent-edit-test.js && node tests/offline-sync-test.js",
+    "test:concurrent": "node tests/concurrent-edit-test.js",
+    "test:offline": "node tests/offline-sync-test.js"
   },
   "dependencies": {
     "react": "^18.2.0",
