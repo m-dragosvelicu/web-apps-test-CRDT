@@ -1,0 +1,55 @@
+{
+  "name": "Operation",
+  "type": "object",
+  "properties": {
+    "document_id": {
+      "type": "string",
+      "description": "Reference to document"
+    },
+    "client_id": {
+      "type": "string",
+      "description": "Unique client session ID"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user who made the change"
+    },
+    "operation_type": {
+      "type": "string",
+      "enum": [
+        "insert",
+        "delete"
+      ],
+      "description": "Type of operation"
+    },
+    "position": {
+      "type": "string",
+      "description": "CRDT position identifier (fractional index as string)"
+    },
+    "character": {
+      "type": "string",
+      "description": "Character being inserted (empty for delete)"
+    },
+    "lamport_timestamp": {
+      "type": "number",
+      "description": "Lamport logical clock value for ordering"
+    },
+    "is_undone": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this operation has been undone"
+    },
+    "undoes_operation_id": {
+      "type": "string",
+      "description": "If this is an undo, the ID of the operation being undone"
+    }
+  },
+  "required": [
+    "document_id",
+    "client_id",
+    "user_email",
+    "operation_type",
+    "position",
+    "lamport_timestamp"
+  ]
+}
