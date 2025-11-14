@@ -103,12 +103,11 @@ export default function TestRunner() {
       robotA.insert(3, 'XXX');
       await sleep(4000);
 
-      // Step 6: Robot B also edits while A is offline
-      setStep('Step 6: Robot B inserts "YYY" - Robot A won\'t see this!');
-      const lenB = robotB.getText().length;
-      addLog(`Inserting "YYY" at position ${lenB}`, 'info', 'B');
-      addLog('⚠ Robot A is still offline and cannot see this change', 'warning', 'B');
-      robotB.insert(lenB, 'YYY');
+      // Step 6: Robot B also edits at the SAME position while A is offline
+      setStep('Step 6: Robot B ALSO inserts "ZZZ" at position 3 - Conflict!');
+      addLog('Inserting "ZZZ" at position 3 (same position as Robot A!)', 'info', 'B');
+      addLog('⚠ Both robots editing at same position - CRDT will resolve this!', 'warning', 'B');
+      robotB.insert(3, 'ZZZ');
       await sleep(4000);
 
       // Step 7: Robot A reconnects
@@ -138,16 +137,17 @@ export default function TestRunner() {
         const hasAAA = textA.includes('AAA');
         const hasBBB = textA.includes('BBB');
         const hasXXX = textA.includes('XXX');
-        const hasYYY = textA.includes('YYY');
+        const hasZZZ = textA.includes('ZZZ');
         const hasMoreText = textA.includes('more text');
 
-        if (hasAAA && hasBBB && hasXXX && hasYYY && hasMoreText) {
-          addLog('✓ All edits preserved: AAA, BBB, XXX, YYY, "more text"', 'success');
+        if (hasAAA && hasBBB && hasXXX && hasZZZ && hasMoreText) {
+          addLog('✓ All edits preserved: AAA, BBB, XXX, ZZZ, "more text"', 'success');
           addLog(`✓ Final merged text: "${textA}"`, 'success');
+          addLog('✓ CRDT resolved the conflict at position 3 deterministically!', 'success');
           setTestStatus('passed');
         } else {
           addLog('✗ Some edits missing!', 'error');
-          addLog(`Missing: ${!hasAAA ? 'AAA ' : ''}${!hasBBB ? 'BBB ' : ''}${!hasXXX ? 'XXX ' : ''}${!hasYYY ? 'YYY ' : ''}${!hasMoreText ? 'more text' : ''}`, 'error');
+          addLog(`Missing: ${!hasAAA ? 'AAA ' : ''}${!hasBBB ? 'BBB ' : ''}${!hasXXX ? 'XXX ' : ''}${!hasZZZ ? 'ZZZ ' : ''}${!hasMoreText ? 'more text' : ''}`, 'error');
           setTestStatus('failed');
         }
       } else {
